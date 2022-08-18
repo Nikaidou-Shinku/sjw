@@ -6,7 +6,7 @@ const Tampermonkey = (): PluginOption => {
 // ==UserScript==
 // @name         Sucking JWXT
 // @namespace    http://tampermonkey.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  翱翔教务系统实用脚本
 // @author       yurzhang
 // @match        https://jwxt.nwpu.edu.cn/course-selection/*
