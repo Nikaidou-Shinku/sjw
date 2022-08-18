@@ -83,7 +83,12 @@ export const App = () => {
   return (
     <>
       {selected().length === 0 ? <Loading /> : (
-        <>
+        <div
+          style={{
+            height: "80vh",
+            "overflow-y": "scroll",
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -100,7 +105,7 @@ export const App = () => {
             changeCost={funChangeCost}
             dropCourse={funDropCourse}
           />
-        </>
+        </div>
       )}
     </>
   );
