@@ -1,8 +1,7 @@
 const AUTH_COOKIE_RE = /cs-course-select-student-token=(.+)/;
 
 export const getCookie = () => {
-  // @ts-ignore
-  const cookies: string[] = unsafeWindow.document.cookie.split("; ");
+  const cookies = unsafeWindow.document.cookie.split("; ");
 
   for (const cookie of cookies) {
     const match = AUTH_COOKIE_RE.exec(cookie);

@@ -1,6 +1,7 @@
 export { type IToken } from "./token";
 export { type ISelected } from "./selected";
 export { type INumber } from "./number";
+export { type IStatus } from "./status";
 
 export interface IResponse<T> {
   result: number;
@@ -11,6 +12,9 @@ export interface IResponse<T> {
 export interface ICourseSummary {
   id: number;
   code: string;
-  maxNum: number;
   name: string;
+  teacher: string;
+  dateTimePlace: string;
+  cost: number;
+  maxNum: number;
 }

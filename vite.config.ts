@@ -1,12 +1,13 @@
 import path from "node:path";
 import { defineConfig, PluginOption } from "vite";
+import solidPlugin from "vite-plugin-solid";
 
 const Tampermonkey = (): PluginOption => {
   const headers = `
 // ==UserScript==
 // @name         Sucking JWXT
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.2.0
 // @description  翱翔教务系统实用脚本
 // @author       yurzhang
 // @match        https://jwxt.nwpu.edu.cn/course-selection/*
@@ -28,10 +29,10 @@ const Tampermonkey = (): PluginOption => {
 };
 
 export default defineConfig({
-  plugins: [Tampermonkey()],
+  plugins: [solidPlugin(), Tampermonkey()],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/main.ts"),
+      entry: path.resolve(__dirname, "src/main.tsx"),
       name: "userscript",
       fileName: (format) => `sjw.${format}.user.js`,
     },
