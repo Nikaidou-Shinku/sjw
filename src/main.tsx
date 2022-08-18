@@ -1,5 +1,5 @@
 import { render } from "solid-js/web";
-import { HopeProvider } from "@hope-ui/solid";
+import { HopeProvider, NotificationsProvider } from "@hope-ui/solid";
 import { App } from "./App";
 
 const main = () => {
@@ -12,7 +12,13 @@ const main = () => {
   const root = unsafeWindow.document.createElement("div");
   DOM.before(root);
   DOM.remove();
-  render(() => <HopeProvider><App /></HopeProvider>, root);
+  render(() => (
+    <HopeProvider>
+      <NotificationsProvider>
+        <App />
+      </NotificationsProvider>
+    </HopeProvider>
+  ), root);
 };
 
 if (!unsafeWindow.location.href.includes("token="))

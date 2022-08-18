@@ -10,7 +10,7 @@ export const fetchNumber = async (
   if (courses.length > 0)
     url = url.substring(0, url.length - 1);
 
-  const resp = await fetch(url, { headers: { "Authorization": cookie } });
+  const resp = await fetch(url, { headers: { Authorization: cookie } });
   const res: IResponse<INumber> = await resp.json();
 
   let result: { [id: number]: number; } = { };

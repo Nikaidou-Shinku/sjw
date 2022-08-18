@@ -1,6 +1,7 @@
 export { type IToken } from "./token";
 export { type ISelected } from "./selected";
 export { type INumber } from "./number";
+export { type IStatus } from "./status";
 
 export interface IResponse<T> {
   result: number;

@@ -1,25 +1,9 @@
-import { createEffect, createMemo, createSignal, For } from "solid-js";
-import { Badge, Button, Spinner, Table, Tbody, Th, Thead, Tr } from "@hope-ui/solid";
-import { ICourseSummary } from "./data/interface";
-import { fetchNumber, fetchSelected, getCookie, getTokens } from "./utils";
-import { Empty } from "./components";
-
-const Loading = () => (
-  <div
-    style={{
-      "margin-top": "20px",
-      "text-align": "center",
-    }}
-  >
-    <Spinner
-      thickness="4px"
-      speed="0.65s"
-      emptyColor="$neutral4"
-      color="$info10"
-      size="xl"
-    />
-  </div>
-);
+import { createEffect, createSignal } from "solid-js";
+import { notificationService } from "@hope-ui/solid";
+import { ICourseSummary, IStatus } from "./data/interface";
+import { changeCost, fetchNumber, fetchSelected, fetchStatus, getCookie, getTokens } from "./utils";
+import { CourseTable, Empty, Loading } from "./components";
+import { dropCourse } from "./utils/dropCourse";
 
 export const App = () => {
   const tokens = getTokens();
@@ -42,67 +26,81 @@ export const App = () => {
     );
   }
 
+  const [status, setStatus] = createSignal<IStatus>({
+    nowCredit: 0,
+    maxCredit: 0,
+    nowCost: 0,
+    maxCost: 0,
+  });
   const [selected, setSelected] = createSignal<ICourseSummary[]>([]);
   const [numList, setNumList] = createSignal<{ [id: number]: number }>({});
 
+  fetchStatus(tokens, cookie).then((res) => setStatus(res));
   fetchSelected(tokens, cookie).then((res) => setSelected(res));
   createEffect(() => fetchNumber(selected(), cookie).then((res) => setNumList(res)));
   setInterval(() => fetchNumber(selected(), cookie).then((res) => setNumList(res)), 2000);
 
+  const funChangeCost = (courseId: number, cost: number) => {
+    changeCost(courseId, cost, tokens, cookie).then((res) => {
+      if (typeof res === "boolean") {
+        notificationService.show({
+          status: "success",
+          title: "成功",
+          description: "修改意愿值成功！",
+        });
+      } else {
+        notificationService.show({
+          status: "danger",
+          title: "失败",
+          description: res,
+        });
+      }
+      fetchStatus(tokens, cookie).then((res) => setStatus(res));
+      fetchSelected(tokens, cookie).then((res) => setSelected(res));
+    });
+  };
+
+  const funDropCourse = (courseId: number) => {
+    dropCourse(courseId, tokens, cookie).then((res) => {
+      if (typeof res === "boolean") {
+        notificationService.show({
+          status: "success",
+          title: "成功",
+          description: "退课成功！",
+        });
+      } else {
+        notificationService.show({
+          status: "danger",
+          title: "失败",
+          description: res,
+        });
+      }
+      fetchStatus(tokens, cookie).then((res) => setStatus(res));
+      fetchSelected(tokens, cookie).then((res) => setSelected(res));
+    });
+  };
+
   return (
     <>
       {selected().length === 0 ? <Loading /> : (
-        <Table striped="odd" highlightOnHover>
-          <Thead>
-            <Tr>
-              <Th>课程名称</Th>
-              <Th>授课教师</Th>
-              <Th>选课人数</Th>
-              <Th>意愿值</Th>
-              <Th>操作</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <For each={selected()}>
-              {(item) => {
-                const num = createMemo(() => numList()[item.id]);
-                const numColor = createMemo(() => num() > item.maxNum ? "red" : "green");
-                const isMorning = item.dateTimePlace.includes("第一节");
-
-                return (
-                  <Tr>
-                    <Th>
-                      <span>{item.name}</span>
-                      {isMorning && (
-                        <Badge
-                          colorScheme="danger"
-                          ml="$2"
-                        >
-                          早八
-                        </Badge>
-                      )}
-                    </Th>
-                    <Th>
-                      <span>{item.teacher}</span>
-                    </Th>
-                    <Th>
-                      <span style={{ color: numColor() }}>
-                        {`${numList()[item.id]} / ${item.maxNum}`}
-                      </span>
-                    </Th>
-                    <Th>
-                      <span>{item.cost}</span>
-                      <Button size="xs" ml="$2">修改</Button>
-                    </Th>
-                    <Th>
-                      <Button size="xs">退课</Button>
-                    </Th>
-                  </Tr>
-                );
-              }}
-            </For>
-          </Tbody>
-        </Table>
+        <>
+          <div
+            style={{
+              display: "flex",
+              margin: "10px 0",
+              "justify-content": "space-evenly",
+            }}
+          >
+            <span>{`已选学分：${status().nowCredit} / ${status().maxCredit}`}</span>
+            <span>{`已用意愿值：${status().nowCost} / ${status().maxCost}`}</span>
+          </div>
+          <CourseTable
+            courses={selected()}
+            numList={numList()}
+            changeCost={funChangeCost}
+            dropCourse={funDropCourse}
+          />
+        </>
       )}
     </>
   );

@@ -14,7 +14,7 @@ export const fetchSelected = async (
 ) => {
   const resp = await fetch(
     `https://jwxt.nwpu.edu.cn/course-selection-api/api/v1/student/course-select/selected-lessons/${turnId}/${studentId}`,
-    { headers: { "Authorization": cookie } },
+    { headers: { Authorization: cookie } },
   );
   const res: IResponse<ISelected[]> = await resp.json();
 
