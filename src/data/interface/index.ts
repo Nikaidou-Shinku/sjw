@@ -11,6 +11,9 @@ export interface IResponse<T> {
 export interface ICourseSummary {
   id: number;
   code: string;
-  maxNum: number;
   name: string;
+  teacher: string;
+  dateTimePlace: string;
+  cost: number;
+  maxNum: number;
 }

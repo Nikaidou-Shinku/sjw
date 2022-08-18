@@ -32,7 +32,7 @@ export default defineConfig({
   plugins: [solidPlugin(), Tampermonkey()],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/main.ts"),
+      entry: path.resolve(__dirname, "src/main.tsx"),
       name: "userscript",
       fileName: (format) => `sjw.${format}.user.js`,
     },

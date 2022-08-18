@@ -19,12 +19,23 @@ export const fetchSelected = async (
   const res: IResponse<ISelected[]> = await resp.json();
 
   let result: ICourseSummary[] = [];
-  res.data.forEach((course) => result.push({
-    id: course.id,
-    code: course.code,
-    maxNum: course.limitCount,
-    name: course.course.nameZh,
-  }));
+  res.data.forEach((course) => {
+    let teachers = "";
+    course.teachers.forEach((teacher) => teachers += `${teacher.nameZh}, `);
+
+    if (course.teachers.length > 0)
+      teachers = teachers.substring(0, teachers.length - 2);
+
+    result.push({
+      id: course.id,
+      code: course.code,
+      name: course.course.nameZh,
+      teacher: teachers,
+      dateTimePlace: course.dateTimePlace.textZh,
+      cost: course.virtualCost,
+      maxNum: course.limitCount,
+    });
+  });
 
   return result;
 };
