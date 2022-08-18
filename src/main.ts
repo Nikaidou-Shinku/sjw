@@ -7,6 +7,10 @@ import { fetchNumber } from "./utils/fetchNumber";
 import { ICourseSummary } from "./data/interface";
 
 const main = async () => {
+  // @ts-ignore
+  if (!unsafeWindow.location.href.startsWith("https://jwxt.nwpu.edu.cn/course-selection/#/course-select/"))
+    return;
+
   const tokens = getTokens();
   if (tokens === null) {
     alert("脚本运行失败，请检查 URL 或尝试刷新重试！");
