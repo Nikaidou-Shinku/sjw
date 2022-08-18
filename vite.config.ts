@@ -1,5 +1,6 @@
 import path from "node:path";
 import { defineConfig, PluginOption } from "vite";
+import solidPlugin from "vite-plugin-solid";
 
 const Tampermonkey = (): PluginOption => {
   const headers = `
@@ -28,7 +29,7 @@ const Tampermonkey = (): PluginOption => {
 };
 
 export default defineConfig({
-  plugins: [Tampermonkey()],
+  plugins: [solidPlugin(), Tampermonkey()],
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/main.ts"),
