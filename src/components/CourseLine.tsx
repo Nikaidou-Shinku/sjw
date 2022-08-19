@@ -23,7 +23,8 @@ interface ICourseLineProps {
 
 export const CourseLine = (props: ICourseLineProps) => {
   const num = createMemo(() => props.numList[props.course.id]);
-  const numColor = createMemo(() => num() > props.course.maxNum ? "red" : "green");
+  const isNumOverflow = createMemo(() => num() > props.course.maxNum);
+  const numColor = createMemo(() => isNumOverflow() ? "red" : "green");
   const isMorning = props.course.dateTimePlace.includes("第一节");
 
   const [cost, setCost] = createSignal(props.course.cost);
@@ -45,7 +46,8 @@ export const CourseLine = (props: ICourseLineProps) => {
       <Th><span>{props.course.teacher}</span></Th>
       <Th>
         <span style={{ color: numColor() }}>
-          {`${props.numList[props.course.id]} / ${props.course.maxNum}`}
+          {`${num()} / ${props.course.maxNum}`}
+          {isNumOverflow() && ` (+${num() - props.course.maxNum})`}
         </span>
       </Th>
       <Th>
