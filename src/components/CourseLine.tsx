@@ -25,7 +25,9 @@ export const CourseLine = (props: ICourseLineProps) => {
   const num = createMemo(() => props.numList[props.course.id] ?? 0);
   const isNumOverflow = createMemo(() => num() > props.course.maxNum);
   const numColor = createMemo(() => isNumOverflow() ? "red" : "green");
-  const isMorning = props.course.dateTimePlace.includes("第一节");
+
+  const isOnlineCourse = props.course.dateTimePlace === null;
+  const isMorning = !isOnlineCourse && props.course.dateTimePlace.includes("第一节");
 
   const [cost, setCost] = createSignal(props.course.cost);
 
@@ -33,6 +35,14 @@ export const CourseLine = (props: ICourseLineProps) => {
     <Tr>
       <Th>
         <span>{props.course.name}</span>
+        {isOnlineCourse && (
+          <Badge
+            colorScheme="info"
+            ml="$2"
+          >
+            网课
+          </Badge>
+        )}
         {isMorning && (
           <Badge
             colorScheme="danger"
