@@ -17,4 +17,5 @@ export interface ICourseSummary {
   dateTimePlace: string;
   cost: number;
   maxNum: number;
+  pinned: boolean;
 }

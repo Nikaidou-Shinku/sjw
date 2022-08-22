@@ -22,8 +22,9 @@ interface ICourseLineProps {
 }
 
 export const CourseLine = (props: ICourseLineProps) => {
-  const num = createMemo(() => props.numList[props.course.id]);
-  const numColor = createMemo(() => num() > props.course.maxNum ? "red" : "green");
+  const num = createMemo(() => props.numList[props.course.id] ?? 0);
+  const isNumOverflow = createMemo(() => num() > props.course.maxNum);
+  const numColor = createMemo(() => isNumOverflow() ? "red" : "green");
   const isMorning = props.course.dateTimePlace.includes("第一节");
 
   const [cost, setCost] = createSignal(props.course.cost);
@@ -45,43 +46,53 @@ export const CourseLine = (props: ICourseLineProps) => {
       <Th><span>{props.course.teacher}</span></Th>
       <Th>
         <span style={{ color: numColor() }}>
-          {`${props.numList[props.course.id]} / ${props.course.maxNum}`}
+          {`${num()} / ${props.course.maxNum}`}
+          {isNumOverflow() && ` (+${num() - props.course.maxNum})`}
         </span>
       </Th>
       <Th>
         <span>{props.course.cost}</span>
-        <Popover>
-          <PopoverTrigger
-            as={Button}
-            size="xs"
+        {props.course.pinned ? (
+          <Badge
+            colorScheme="success"
             ml="$2"
-            variant="subtle"
           >
-            修改
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverHeader>
-              您要修改成多少意愿值呢？
-            </PopoverHeader>
-            <PopoverBody>
-              <Input
-                required
-                size="xs"
-                value={cost()}
-                onInput={(event: any) => setCost(event.target.value)} // 这个 any 摆烂了
-                width="auto"
-              />
-              <Button
-                size="xs"
-                onClick={() => props.changeCost(props.course.id, cost())}
-                ml="$2"
-              >
-                确定
-              </Button>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
+            已选中
+          </Badge>
+        ) : (
+          <Popover>
+            <PopoverTrigger
+              as={Button}
+              size="xs"
+              ml="$2"
+              variant="subtle"
+            >
+              修改
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverHeader>
+                您要修改成多少意愿值呢？
+              </PopoverHeader>
+              <PopoverBody>
+                <Input
+                  required
+                  size="xs"
+                  value={cost()}
+                  onInput={(event: any) => setCost(event.target.value)} // 这个 any 摆烂了
+                  width="auto"
+                />
+                <Button
+                  size="xs"
+                  onClick={() => props.changeCost(props.course.id, cost())}
+                  ml="$2"
+                >
+                  确定
+                </Button>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        )}
       </Th>
       <Th>
         <Button
