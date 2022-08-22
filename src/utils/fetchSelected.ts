@@ -34,6 +34,7 @@ export const fetchSelected = async (
       dateTimePlace: course.dateTimePlace.textZh,
       cost: course.virtualCost,
       maxNum: course.limitCount,
+      pinned: course.pinned,
     });
   });
 
