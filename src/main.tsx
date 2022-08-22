@@ -22,4 +22,4 @@ const main = () => {
 };
 
 if (!unsafeWindow.location.href.includes("token="))
-  setTimeout(main, 1000);
+  setTimeout(main, 2000);
