@@ -13,6 +13,7 @@ const Tampermonkey = (): PluginOption => {
 // @match        https://jwxt.nwpu.edu.cn/course-selection/*
 // @icon         https://uis.nwpu.edu.cn/cas/themes/nwpu/favicon.ico
 // @grant        unsafeWindow
+// @grant        GM_addStyle
 // ==/UserScript==
   `.trim();
 

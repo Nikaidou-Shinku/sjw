@@ -1,3 +1,3 @@
 export interface INumber {
-  [id: number]: string;
+  [id: number]: number;
 }

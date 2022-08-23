@@ -35,7 +35,7 @@ interface IDateTimePlace {
   textZh: string;
 }
 
-interface ISchedule {
+export interface ISchedule {
   endUnit: number;
   entTime: number;
   lessonId: number;

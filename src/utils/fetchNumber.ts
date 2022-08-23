@@ -11,9 +11,9 @@ export const fetchNumber = async (
     url = url.substring(0, url.length - 1);
 
   const resp = await fetch(url, { headers: { Authorization: cookie } });
-  const res: IResponse<INumber> = await resp.json();
+  const res: IResponse<{ [id: number]: string; }> = await resp.json();
 
-  let result: { [id: number]: number; } = { };
+  let result: INumber = { };
 
   for (const key in res.data) {
     const tmp = res.data[key];

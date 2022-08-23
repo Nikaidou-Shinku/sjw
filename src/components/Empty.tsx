@@ -6,24 +6,34 @@ interface IEmptyProps {
 }
 
 export const Empty = (props: IEmptyProps) => (
-  <Alert
-    status="danger"
-    variant="subtle"
-    flexDirection="column"
-    justifyContent="center"
-    textAlign="center"
-    height="200px"
+  <div
+    style={{
+      display: "flex",
+      "justify-content": "center",
+      "align-items": "center",
+      height: "80vh",
+    }}
   >
-    <AlertIcon boxSize="40px" mr="0" />
-    <AlertTitle
-      mt="$4"
-      mb="$1"
-      fontSize="$lg"
+    <Alert
+      status="danger"
+      variant="subtle"
+      flexDirection="column"
+      justifyContent="center"
+      textAlign="center"
+      minWidth="400px"
+      height="200px"
     >
-      {props.title}
-    </AlertTitle>
-    <AlertDescription maxWidth="$sm">
-      {props.content}
-    </AlertDescription>
-  </Alert>
+      <AlertIcon boxSize="40px" mr="0" />
+      <AlertTitle
+        mt="$4"
+        mb="$1"
+        fontSize="$lg"
+      >
+        {props.title}
+      </AlertTitle>
+      <AlertDescription maxWidth="$sm">
+        {props.content}
+      </AlertDescription>
+    </Alert>
+  </div>
 );

@@ -12,9 +12,10 @@ import {
   Th,
   Tr,
 } from "@hope-ui/solid";
-import { ICourseSummary } from "../data/interface";
+import { ICourseSummary } from "../../data/interface";
 
 interface ICourseLineProps {
+  index: number;
   course: ICourseSummary;
   numList: { [id: number]: number };
   changeCost: (courseId: number, cost: number) => void;
@@ -32,7 +33,7 @@ export const CourseLine = (props: ICourseLineProps) => {
   const [cost, setCost] = createSignal(props.course.cost);
 
   return (
-    <Tr>
+    <Tr style={{ "background-color": `rgba(255, 255, 255, ${props.index % 2 == 0 ? "0.75" : "0.33"})` }}>
       <Th>
         <span>{props.course.name}</span>
         {isOnlineCourse && (

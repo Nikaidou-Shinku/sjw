@@ -1,9 +1,9 @@
 import { For } from "solid-js";
-import { Table, Tbody, Th, Thead, Tr } from "@hope-ui/solid";
-import { ICourseSummary } from "../data/interface";
+import { Table, Thead, Tr, Th, Tbody, css, Box } from "@hope-ui/solid";
+import { ICourseSummary } from "../../data/interface";
 import { CourseLine } from "./CourseLine";
 
-interface ICourseTableProps {
+interface ISelectedListProps {
   courses: ICourseSummary[];
   numList: {
     [id: number]: number;
@@ -12,9 +12,15 @@ interface ICourseTableProps {
   dropCourse: (courseId: number) => void;
 }
 
-export const CourseTable = (props: ICourseTableProps) => {
-  return (
-    <Table striped="odd" highlightOnHover>
+const tableStyles = css({
+  "thead > tr": {
+    "background-color": "rgba(255, 255, 255, 0.8) !important",
+  },
+});
+
+export const SelectedList = (props: ISelectedListProps) => (
+  <Box height="100%" overflowY="scroll">
+    <Table class={tableStyles()}>
       <Thead>
         <Tr>
           <Th>课程名称</Th>
@@ -27,8 +33,9 @@ export const CourseTable = (props: ICourseTableProps) => {
       </Thead>
       <Tbody>
         <For each={props.courses}>
-          {(item) => (
+          {(item, i) => (
             <CourseLine
+              index={i() + 1}
               course={item}
               numList={props.numList}
               changeCost={props.changeCost}
@@ -38,5 +45,5 @@ export const CourseTable = (props: ICourseTableProps) => {
         </For>
       </Tbody>
     </Table>
-  );
-};
+  </Box>
+);
