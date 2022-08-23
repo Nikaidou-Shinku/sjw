@@ -35,23 +35,23 @@ interface IDateTimePlace {
   textZh: string;
 }
 
-interface ISchedule {
-  endUnit: number;
-  entTime: number;
+export interface ISchedule {
   lessonId: number;
   scheduleGroupId: number;
-  startTime: number;
-  startUnit: number;
   weekday: number;
+  startUnit: number;
+  endUnit: number;
+  startTime: number;
+  entTime: number;
 }
 
-interface IScheduleGroup {
-  dateTimePlace: IDateTimePlace;
-  default: boolean;
+export interface IScheduleGroup {
   id: number;
-  limitCount: number;
   no: number;
+  limitCount: number;
+  dateTimePlace: IDateTimePlace;
   schedules: ISchedule[];
+  default: boolean;
 }
 
 interface ITeacher {

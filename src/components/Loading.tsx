@@ -3,8 +3,10 @@ import { Spinner } from "@hope-ui/solid";
 export const Loading = () => (
   <div
     style={{
-      "margin-top": "20px",
-      "text-align": "center",
+      display: "flex",
+      "justify-content": "center",
+      "align-items": "center",
+      height: "80vh",
     }}
   >
     <Spinner

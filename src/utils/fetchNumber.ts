@@ -1,7 +1,7 @@
-import { ICourseSummary, INumber, IResponse } from "../data/interface";
+import { INumber, IResponse } from "../data/interface";
 
 export const fetchNumber = async (
-  courses: ICourseSummary[],
+  courses: { id: number; }[],
   cookie: string,
 ) => {
   let url = "https://jwxt.nwpu.edu.cn/course-selection-api/api/v1/student/course-select/std-count?lessonIds=";
@@ -11,9 +11,9 @@ export const fetchNumber = async (
     url = url.substring(0, url.length - 1);
 
   const resp = await fetch(url, { headers: { Authorization: cookie } });
-  const res: IResponse<INumber> = await resp.json();
+  const res: IResponse<{ [id: number]: string; }> = await resp.json();
 
-  let result: { [id: number]: number; } = { };
+  let result: INumber = { };
 
   for (const key in res.data) {
     const tmp = res.data[key];

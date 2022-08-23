@@ -9,12 +9,14 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  Th,
+  Td,
   Tr,
 } from "@hope-ui/solid";
-import { ICourseSummary } from "../data/interface";
+import { ICourseSummary } from "../../data/interface";
+import { DropButton } from "..";
 
 interface ICourseLineProps {
+  index: number;
   course: ICourseSummary;
   numList: { [id: number]: number };
   changeCost: (courseId: number, cost: number) => void;
@@ -32,13 +34,13 @@ export const CourseLine = (props: ICourseLineProps) => {
   const [cost, setCost] = createSignal(props.course.cost);
 
   return (
-    <Tr>
-      <Th>
+    <Tr style={{ "background-color": `rgba(255, 255, 255, ${props.index % 2 == 0 ? "0.75" : "0.33"})` }}>
+      <Td>
         <span>{props.course.name}</span>
         {isOnlineCourse && (
           <Badge
             colorScheme="info"
-            ml="$2"
+            ml="$1"
           >
             网课
           </Badge>
@@ -46,26 +48,26 @@ export const CourseLine = (props: ICourseLineProps) => {
         {isMorning && (
           <Badge
             colorScheme="danger"
-            ml="$2"
+            ml="$1"
           >
             早八
           </Badge>
         )}
-      </Th>
-      <Th><span>{props.course.code}</span></Th>
-      <Th><span>{props.course.teacher}</span></Th>
-      <Th>
+      </Td>
+      <Td><span>{props.course.code}</span></Td>
+      <Td><span>{props.course.teacher}</span></Td>
+      <Td>
         <span style={{ color: numColor() }}>
           {`${num()} / ${props.course.maxNum}`}
           {isNumOverflow() && ` (+${num() - props.course.maxNum})`}
         </span>
-      </Th>
-      <Th>
+      </Td>
+      <Td>
         <span>{props.course.cost}</span>
         {props.course.pinned ? (
           <Badge
             colorScheme="success"
-            ml="$2"
+            ml="$1"
           >
             已选中
           </Badge>
@@ -74,7 +76,7 @@ export const CourseLine = (props: ICourseLineProps) => {
             <PopoverTrigger
               as={Button}
               size="xs"
-              ml="$2"
+              ml="$1"
               variant="subtle"
             >
               修改
@@ -89,7 +91,7 @@ export const CourseLine = (props: ICourseLineProps) => {
                   required
                   size="xs"
                   value={cost()}
-                  onInput={(event: any) => setCost(event.target.value)} // 这个 any 摆烂了
+                  onInput={(e: any) => setCost(e.target.value)} // 这个 any 摆烂了
                   width="auto"
                 />
                 <Button
@@ -103,42 +105,14 @@ export const CourseLine = (props: ICourseLineProps) => {
             </PopoverContent>
           </Popover>
         )}
-      </Th>
-      <Th>
-        <Popover>
-          <PopoverTrigger
-            as={Button}
-            size="xs"
-            variant="subtle"
-          >
-            退课
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverHeader>
-              <div>
-                <span>您真的要退课吗？</span>
-                {props.course.pinned && (
-                  <>
-                    <br />
-                    <span style={{ color: "red" }}>
-                      注意：该课程当前为已选中状态！
-                    </span>
-                  </>
-                )}
-              </div>
-            </PopoverHeader>
-            <PopoverBody>
-              <Button
-                size="xs"
-                onClick={() => props.dropCourse(props.course.id)}
-              >
-                确定
-              </Button>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
-      </Th>
+      </Td>
+      <Td>
+        <DropButton
+          id={props.course.id}
+          pinned={props.course.pinned}
+          dropCourse={props.dropCourse}
+        />
+      </Td>
     </Tr>
   );
 };
