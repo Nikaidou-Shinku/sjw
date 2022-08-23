@@ -32,3 +32,6 @@ export { fetchSelected } from "./fetchSelected";
 export { fetchNumber } from "./fetchNumber";
 export { changeCost } from "./changeCost";
 export { dropCourse } from "./dropCourse";
+export { fetchCourses } from "./fetchCourses";
+export { searchCourse } from "./searchCourse";
+export { addCourse } from "./addCourse";

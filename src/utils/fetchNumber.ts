@@ -1,7 +1,7 @@
-import { ICourseSummary, INumber, IResponse } from "../data/interface";
+import { INumber, IResponse } from "../data/interface";
 
 export const fetchNumber = async (
-  courses: ICourseSummary[],
+  courses: { id: number; }[],
   cookie: string,
 ) => {
   let url = "https://jwxt.nwpu.edu.cn/course-selection-api/api/v1/student/course-select/std-count?lessonIds=";

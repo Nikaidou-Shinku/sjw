@@ -1,7 +1,7 @@
-import { createEffect, createSignal, Show } from "solid-js";
+import { createSignal, onCleanup, onMount, Show } from "solid-js";
 import { Container, Flex, Heading, notificationService, Tab, TabList, TabPanel, Tabs } from "@hope-ui/solid";
-import { IBaseData, ICourseSummary, INumber, IStatus } from "./data/interface";
-import { changeCost, dropCourse, fetchNumber, fetchSelected, fetchStatus } from "./utils";
+import { IBaseData, ICourseSummary, IStatus } from "./data/interface";
+import { addCourse, changeCost, dropCourse, fetchSelected, fetchStatus } from "./utils";
 import { CourseList, CreditAndCost, SelectedList, TimeTable } from "./components";
 
 interface IHomeProps {
@@ -11,22 +11,16 @@ interface IHomeProps {
 export const Home = (props: IHomeProps) => {
   const [status, setStatus] = createSignal<IStatus | null>(null);
   const [selected, setSelected] = createSignal<ICourseSummary[] | null>(null);
-  const [numList, setNumList] = createSignal<INumber>({});
 
   const updateSelectedCourses = () => {
     fetchStatus(props.base.tokens, props.base.cookie).then((res) => setStatus(res));
     fetchSelected(props.base.tokens, props.base.cookie).then((res) => setSelected(res));
   };
-  const updateNumber = () => {
-    const courses = selected();
-    if (courses !== null) {
-      fetchNumber(courses, props.base.cookie).then((res) => setNumList(res));
-    }
-  };
 
-  updateSelectedCourses();
-  createEffect(updateNumber);
-  setInterval(updateNumber, 2000);
+  onMount(updateSelectedCourses);
+
+  const infoTimer = setInterval(updateSelectedCourses, 10000);
+  onCleanup(() => clearInterval(infoTimer));
 
   const funChangeCost = (courseId: number, cost: number) => {
     changeCost(courseId, cost, props.base.tokens, props.base.cookie).then((res) => {
@@ -66,6 +60,25 @@ export const Home = (props: IHomeProps) => {
     });
   };
 
+  const funAddCourse = (courseId: number, cost: number) => {
+    addCourse(props.base.tokens, props.base.cookie, courseId, cost).then((res) => {
+      if (typeof res === "boolean") {
+        notificationService.show({
+          status: "success",
+          title: "成功",
+          description: "选课成功！",
+        });
+      } else {
+        notificationService.show({
+          status: "danger",
+          title: "失败",
+          description: res,
+        });
+      }
+      updateSelectedCourses();
+    });
+  };
+
   return (
     <Container
       bg="$whiteAlpha11"
@@ -85,21 +98,26 @@ export const Home = (props: IHomeProps) => {
           fallback={<div>正在加载课表……</div>}
         >
           <TimeTable selected={selected() as ICourseSummary[]} />
-          <Tabs flex={1} height="100%" alignment="center">
+          <Tabs flex={1} height="100%" alignment="center" keepAlive>
             <TabList>
               <Tab>已选课程</Tab>
               <Tab>全部课程</Tab>
             </TabList>
             <TabPanel height="calc(100% - 41px)" padding={0}>
               <SelectedList
+                base={props.base}
                 courses={selected() as ICourseSummary[]}
-                numList={numList()}
                 changeCost={funChangeCost}
                 dropCourse={funDropCourse}
               />
             </TabPanel>
-            <TabPanel>
-              <CourseList />
+            <TabPanel height="calc(100% - 41px)" padding={0}>
+              <CourseList
+                base={props.base}
+                selected={selected() as ICourseSummary[]}
+                dropCourse={funDropCourse}
+                addCourse={funAddCourse}
+              />
             </TabPanel>
           </Tabs>
         </Show>
